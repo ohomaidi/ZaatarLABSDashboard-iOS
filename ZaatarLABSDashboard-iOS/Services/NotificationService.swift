@@ -122,32 +122,26 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         willPresent notification: UNNotification,
         withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
     ) {
-        saveNotification(notification)
+        storeNotification(notification)
         completionHandler([.banner, .sound, .badge])
     }
 
-    // Handle notification tap
+    // Handle notification tap (from background/locked)
     func userNotificationCenter(
         _ center: UNUserNotificationCenter,
         didReceive response: UNNotificationResponse,
         withCompletionHandler completionHandler: @escaping () -> Void
     ) {
-        saveNotification(response.notification)
+        storeNotification(response.notification)
         completionHandler()
     }
 
-    func applicationDidBecomeActive(_ application: UIApplication) {
-        Task { @MainActor in
-            NotificationStore.shared.clearBadge()
-        }
-    }
+    private var savedIDs = Set<String>()
 
-    private var savedNotificationIDs = Set<String>()
-
-    private func saveNotification(_ notification: UNNotification) {
-        let requestID = notification.request.identifier
-        guard !savedNotificationIDs.contains(requestID) else { return }
-        savedNotificationIDs.insert(requestID)
+    private func storeNotification(_ notification: UNNotification) {
+        let id = notification.request.identifier
+        guard !savedIDs.contains(id) else { return }
+        savedIDs.insert(id)
 
         let content = notification.request.content
         let title = content.title
