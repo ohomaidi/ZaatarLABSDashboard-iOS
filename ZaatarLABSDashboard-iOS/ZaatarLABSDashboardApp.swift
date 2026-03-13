@@ -2,6 +2,7 @@ import SwiftUI
 
 @main
 struct ZaatarLABSDashboardApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @StateObject private var api = APIService.shared
     @State private var didLogout = false
 
@@ -10,6 +11,12 @@ struct ZaatarLABSDashboardApp: App {
             if api.isAuthenticated {
                 MainTabView()
                     .environmentObject(api)
+                    .onAppear {
+                        // Re-register device token after login
+                        if let token = UserDefaults.standard.string(forKey: "apns_device_token") {
+                            Task { await api.registerDeviceToken(token) }
+                        }
+                    }
             } else {
                 LoginView(autoPromptBiometrics: !didLogout)
                     .environmentObject(api)

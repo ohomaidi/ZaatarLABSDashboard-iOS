@@ -10,9 +10,22 @@
 		40539DAB2F63650400422BC3 /* ZaatarLABSDashboard-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ZaatarLABSDashboard-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		401E73A32F63EEB30085F424 /* Exceptions for "ZaatarLABSDashboard-iOS" folder in "ZaatarLABSDashboard-iOS" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 40539DAA2F63650400422BC3 /* ZaatarLABSDashboard-iOS */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		40539DAD2F63650400422BC3 /* ZaatarLABSDashboard-iOS */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				401E73A32F63EEB30085F424 /* Exceptions for "ZaatarLABSDashboard-iOS" folder in "ZaatarLABSDashboard-iOS" target */,
+			);
 			path = "ZaatarLABSDashboard-iOS";
 			sourceTree = "<group>";
 		};
@@ -251,11 +264,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "ZaatarLABSDashboard-iOS/ZaatarLABSDashboard-iOS.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = P49VS8FTW9;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "ZaatarLABSDashboard-iOS/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = ZaatarLABS;
 				INFOPLIST_KEY_NSFaceIDUsageDescription = "Authenticate with Face ID to acces your dashboard";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -284,11 +300,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "ZaatarLABSDashboard-iOS/ZaatarLABSDashboard-iOS.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = P49VS8FTW9;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "ZaatarLABSDashboard-iOS/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = ZaatarLABS;
 				INFOPLIST_KEY_NSFaceIDUsageDescription = "Authenticate with Face ID to acces your dashboard";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

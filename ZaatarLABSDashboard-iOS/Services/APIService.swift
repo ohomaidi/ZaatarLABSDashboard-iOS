@@ -1,4 +1,5 @@
 import Foundation
+import UIKit
 import Combine
 
 @MainActor
@@ -47,6 +48,31 @@ final class APIService: ObservableObject {
 
     func logout() {
         isAuthenticated = false
+    }
+
+    // MARK: - Device Token Registration
+
+    func registerDeviceToken(_ token: String) async {
+        guard isAuthenticated, !password.isEmpty else { return }
+
+        do {
+            let url = URL(string: "\(baseURL)/api/register-device")!
+            var request = URLRequest(url: url)
+            request.httpMethod = "POST"
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.setValue("Bearer \(password)", forHTTPHeaderField: "Authorization")
+            request.httpBody = try JSONEncoder().encode([
+                "deviceToken": token,
+                "deviceName": UIDevice.current.name,
+            ])
+
+            let (_, response) = try await URLSession.shared.data(for: request)
+            if let http = response as? HTTPURLResponse {
+                print("Device token registration: \(http.statusCode)")
+            }
+        } catch {
+            print("Failed to register device token: \(error.localizedDescription)")
+        }
     }
 
     // MARK: - Generic Fetch
