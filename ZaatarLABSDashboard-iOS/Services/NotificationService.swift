@@ -68,8 +68,9 @@ class NotificationStore {
     /// This catches notifications received while the app was killed or in the background
     /// that the user didn't tap on (so didReceive never fired).
     func syncDeliveredNotifications() {
-        UNUserNotificationCenter.current().getDeliveredNotifications { [weak self] delivered in
-            let existingIDs = Set((self?.notifications ?? []).map { $0.id })
+        let existingIDs = Set(notifications.map { $0.id })
+        Task {
+            let delivered = await UNUserNotificationCenter.current().deliveredNotifications()
             var newItems: [StoredNotification] = []
             for notification in delivered {
                 let id = notification.request.identifier
@@ -84,14 +85,12 @@ class NotificationStore {
                 ))
             }
             guard !newItems.isEmpty else { return }
-            Task { @MainActor [weak self] in
-                guard let self else { return }
-                // Sort newest first, insert at top
+            await MainActor.run {
                 let sorted = newItems.sorted { $0.receivedAt > $1.receivedAt }
-                self.notifications.insert(contentsOf: sorted, at: 0)
-                self.unreadCount += sorted.count
-                self.save()
-                UserDefaults.standard.set(self.unreadCount, forKey: self.unreadKey)
+                notifications.insert(contentsOf: sorted, at: 0)
+                unreadCount += sorted.count
+                save()
+                UserDefaults.standard.set(unreadCount, forKey: unreadKey)
             }
         }
     }
