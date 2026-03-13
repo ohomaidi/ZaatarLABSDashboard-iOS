@@ -12,6 +12,8 @@ struct OverviewView: View {
     @State private var appLaunches: AppLaunchesResponse?
     @State private var isLoading = false
     @State private var error: String?
+    @State private var showNotifications = false
+    var notificationStore = NotificationStore.shared
 
     var body: some View {
         NavigationStack {
@@ -28,6 +30,11 @@ struct OverviewView: View {
             .navigationTitle("Overview")
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
+                    Button { showNotifications = true } label: {
+                        Image(systemName: notificationStore.unreadCount > 0 ? "bell.badge" : "bell")
+                    }
+                }
+                ToolbarItem(placement: .topBarTrailing) {
                     Button { Task { try? await api.refresh(); load() } } label: {
                         Image(systemName: "arrow.clockwise")
                     }
@@ -36,6 +43,9 @@ struct OverviewView: View {
                     Button("Logout") { api.logout() }
                         .foregroundStyle(.red)
                 }
+            }
+            .sheet(isPresented: $showNotifications) {
+                NotificationsView()
             }
         }
         .task { load() }

@@ -240,6 +240,15 @@ struct AppInfo: Codable, Identifiable, Hashable {
     let displayName: String
 }
 
+// MARK: - Notifications
+
+struct StoredNotification: Codable, Identifiable {
+    let id: String
+    let title: String
+    let body: String
+    let receivedAt: Date
+}
+
 // MARK: - Helpers
 
 enum DateRangeFilter: String, CaseIterable {
