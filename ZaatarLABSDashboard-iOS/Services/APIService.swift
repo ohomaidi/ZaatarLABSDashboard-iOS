@@ -9,11 +9,21 @@ final class APIService: ObservableObject {
     @Published var isAuthenticated = false
     private var password: String = ""
 
+    /// Whether a password has been saved from a previous session
+    var hasSavedPassword: Bool {
+        !password.isEmpty
+    }
+
     private init() {
         if let saved = UserDefaults.standard.string(forKey: "dashboard_password"), !saved.isEmpty {
             password = saved
-            isAuthenticated = true
         }
+    }
+
+    /// Log in using the previously saved password (after biometric auth)
+    func loginWithSavedPassword() async throws {
+        guard !password.isEmpty else { return }
+        try await login(password: password)
     }
 
     // MARK: - Auth
@@ -36,9 +46,7 @@ final class APIService: ObservableObject {
     }
 
     func logout() {
-        password = ""
         isAuthenticated = false
-        UserDefaults.standard.removeObject(forKey: "dashboard_password")
     }
 
     // MARK: - Generic Fetch

@@ -9,6 +9,7 @@ struct OverviewView: View {
 
     @State private var overview: OverviewResponse?
     @State private var plans: PlansResponse?
+    @State private var appLaunches: AppLaunchesResponse?
     @State private var isLoading = false
     @State private var error: String?
 
@@ -59,6 +60,10 @@ struct OverviewView: View {
                     MetricCard("Billing Issues", value: "\(data.billingIssues)", color: data.billingIssues > 0 ? .red : .secondary)
                     MetricCard("Expired", value: "\(data.expired)", color: .secondary)
                     MetricCard("Refunded", value: "\(data.refunded)", color: data.refunded > 0 ? .red : .secondary)
+                    if let appLaunches {
+                        MetricCard("First Downloads", value: "\(appLaunches.firstInstalls)", color: .green)
+                        MetricCard("Redownloads", value: "\(appLaunches.redownloads)", color: .orange)
+                    }
                 }
                 .padding(.horizontal)
 
@@ -115,8 +120,10 @@ struct OverviewView: View {
                 }
                 async let o = api.fetchOverview(filter: filter, app: selectedApp)
                 async let p = api.fetchPlans(filter: filter, app: selectedApp)
+                async let a = api.fetchAppLaunches(filter: filter, app: selectedApp)
                 overview = try await o
                 plans = try await p
+                appLaunches = try? await a
             } catch {
                 self.error = error.localizedDescription
             }
