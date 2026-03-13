@@ -5,6 +5,7 @@ struct ZaatarLABSDashboardApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @StateObject private var api = APIService.shared
     @State private var didLogout = false
+    @Environment(\.scenePhase) private var scenePhase
 
     var body: some Scene {
         WindowGroup {
@@ -20,6 +21,12 @@ struct ZaatarLABSDashboardApp: App {
             } else {
                 LoginView(autoPromptBiometrics: !didLogout)
                     .environmentObject(api)
+            }
+        }
+        .onChange(of: scenePhase) { _, newPhase in
+            if newPhase == .active {
+                // Sync any notifications received while app was in background/killed
+                NotificationStore.shared.syncDeliveredNotifications()
             }
         }
         .onChange(of: api.isAuthenticated) { oldValue, newValue in

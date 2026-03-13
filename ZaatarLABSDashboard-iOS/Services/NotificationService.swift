@@ -19,12 +19,14 @@ class NotificationStore {
         unreadCount = UserDefaults.standard.integer(forKey: unreadKey)
     }
 
-    func add(title: String, body: String) {
+    func add(id: String = UUID().uuidString, title: String, body: String, date: Date = Date()) {
+        // Skip if already stored
+        guard !notifications.contains(where: { $0.id == id }) else { return }
         let notification = StoredNotification(
-            id: UUID().uuidString,
+            id: id,
             title: title,
             body: body,
-            receivedAt: Date()
+            receivedAt: date
         )
         notifications.insert(notification, at: 0)
         unreadCount += 1
@@ -60,6 +62,38 @@ class NotificationStore {
         guard let data = UserDefaults.standard.data(forKey: storageKey),
               let saved = try? JSONDecoder().decode([StoredNotification].self, from: data) else { return }
         notifications = saved
+    }
+
+    /// Sync any delivered notifications from the notification center that we haven't stored yet.
+    /// This catches notifications received while the app was killed or in the background
+    /// that the user didn't tap on (so didReceive never fired).
+    func syncDeliveredNotifications() {
+        UNUserNotificationCenter.current().getDeliveredNotifications { [weak self] delivered in
+            let existingIDs = Set((self?.notifications ?? []).map { $0.id })
+            var newItems: [StoredNotification] = []
+            for notification in delivered {
+                let id = notification.request.identifier
+                guard !existingIDs.contains(id) else { continue }
+                let content = notification.request.content
+                guard !content.title.isEmpty || !content.body.isEmpty else { continue }
+                newItems.append(StoredNotification(
+                    id: id,
+                    title: content.title,
+                    body: content.body,
+                    receivedAt: notification.date
+                ))
+            }
+            guard !newItems.isEmpty else { return }
+            Task { @MainActor [weak self] in
+                guard let self else { return }
+                // Sort newest first, insert at top
+                let sorted = newItems.sorted { $0.receivedAt > $1.receivedAt }
+                self.notifications.insert(contentsOf: sorted, at: 0)
+                self.unreadCount += sorted.count
+                self.save()
+                UserDefaults.standard.set(self.unreadCount, forKey: self.unreadKey)
+            }
+        }
     }
 
     private func removeOlderThan30Days() {
@@ -147,8 +181,9 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         let title = content.title
         let body = content.body
         guard !title.isEmpty || !body.isEmpty else { return }
+        let date = notification.date
         Task { @MainActor in
-            NotificationStore.shared.add(title: title, body: body)
+            NotificationStore.shared.add(id: id, title: title, body: body, date: date)
         }
     }
 }
