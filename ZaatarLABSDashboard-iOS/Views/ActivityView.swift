@@ -5,6 +5,7 @@ struct ActivityView: View {
     @EnvironmentObject var api: APIService
     @Binding var filter: DateRangeFilter
     @Binding var selectedApp: String?
+    @Binding var apps: [AppInfo]
 
     @State private var timeline: TimelineResponse?
     @State private var trends: [TrendMonth]?
@@ -33,6 +34,7 @@ struct ActivityView: View {
     private var content: some View {
         ScrollView {
             VStack(spacing: 16) {
+                AppPicker(selectedApp: $selectedApp, apps: apps)
                 FilterPicker(filter: $filter)
 
                 // Monthly trends chart

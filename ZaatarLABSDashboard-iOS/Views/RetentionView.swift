@@ -4,6 +4,7 @@ struct RetentionView: View {
     @EnvironmentObject var api: APIService
     @Binding var filter: DateRangeFilter
     @Binding var selectedApp: String?
+    @Binding var apps: [AppInfo]
 
     @State private var cohorts: [RetentionCohort]?
     @State private var isLoading = false
@@ -31,6 +32,7 @@ struct RetentionView: View {
     private func content(_ cohorts: [RetentionCohort]) -> some View {
         ScrollView {
             VStack(spacing: 16) {
+                AppPicker(selectedApp: $selectedApp, apps: apps)
                 FilterPicker(filter: $filter)
 
                 if cohorts.isEmpty {

@@ -13,7 +13,7 @@ struct OverviewView: View {
     @State private var isLoading = false
     @State private var error: String?
     @State private var showNotifications = false
-    var notificationStore = NotificationStore.shared
+    @State private var notificationStore = NotificationStore.shared
 
     var body: some View {
         NavigationStack {
@@ -59,6 +59,12 @@ struct OverviewView: View {
             VStack(spacing: 16) {
                 AppPicker(selectedApp: $selectedApp, apps: apps)
                 FilterPicker(filter: $filter)
+
+                if isLoading && overview != nil {
+                    ProgressView()
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .padding(.vertical, 4)
+                }
 
                 // KPI Grid
                 LazyVGrid(columns: [.init(), .init()], spacing: 12) {
@@ -124,7 +130,6 @@ struct OverviewView: View {
         error = nil
         Task {
             do {
-                // Load apps list if not yet loaded
                 if apps.isEmpty {
                     apps = (try? await api.fetchApps()) ?? []
                 }

@@ -5,7 +5,6 @@ struct ZaatarLABSDashboardApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @StateObject private var api = APIService.shared
     @State private var didLogout = false
-    @Environment(\.scenePhase) private var scenePhase
 
     var body: some Scene {
         WindowGroup {
@@ -28,11 +27,6 @@ struct ZaatarLABSDashboardApp: App {
                 didLogout = true
             } else if newValue == true {
                 didLogout = false
-            }
-        }
-        .onChange(of: scenePhase) { _, newPhase in
-            if newPhase == .active {
-                NotificationStore.shared.clearBadge()
             }
         }
     }

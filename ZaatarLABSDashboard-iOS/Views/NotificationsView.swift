@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct NotificationsView: View {
-    var store = NotificationStore.shared
+    @State private var store = NotificationStore.shared
 
     var body: some View {
         NavigationStack {

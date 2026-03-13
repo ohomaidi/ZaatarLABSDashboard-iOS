@@ -4,6 +4,7 @@ struct SubscribersView: View {
     @EnvironmentObject var api: APIService
     @Binding var filter: DateRangeFilter
     @Binding var selectedApp: String?
+    @Binding var apps: [AppInfo]
 
     @State private var data: SubscribersResponse?
     @State private var isLoading = false
@@ -35,6 +36,12 @@ struct SubscribersView: View {
     @ViewBuilder
     private func content(_ data: SubscribersResponse) -> some View {
         List {
+            Section {
+                AppPicker(selectedApp: $selectedApp, apps: apps)
+                    .listRowInsets(EdgeInsets())
+                    .listRowBackground(Color.clear)
+            }
+
             Section {
                 FilterPicker(filter: $filter)
                     .listRowInsets(EdgeInsets())

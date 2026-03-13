@@ -13,27 +13,27 @@ struct MainTabView: View {
                     Label("Overview", systemImage: "chart.pie")
                 }
 
-            SubscribersView(filter: $selectedFilter, selectedApp: $selectedApp)
+            SubscribersView(filter: $selectedFilter, selectedApp: $selectedApp, apps: $apps)
                 .tabItem {
                     Label("Subscribers", systemImage: "person.3")
                 }
 
-            AppleDataView(filter: $selectedFilter, selectedApp: $selectedApp)
+            AppleDataView(filter: $selectedFilter, selectedApp: $selectedApp, apps: $apps)
                 .tabItem {
                     Label("Apple Data", systemImage: "apple.logo")
                 }
 
-            AppReportingView(filter: $selectedFilter, selectedApp: $selectedApp)
+            AppReportingView(filter: $selectedFilter, selectedApp: $selectedApp, apps: $apps)
                 .tabItem {
                     Label("Reporting", systemImage: "app.badge")
                 }
 
-            ActivityView(filter: $selectedFilter, selectedApp: $selectedApp)
+            ActivityView(filter: $selectedFilter, selectedApp: $selectedApp, apps: $apps)
                 .tabItem {
                     Label("Activity", systemImage: "clock.arrow.circlepath")
                 }
 
-            RetentionView(filter: $selectedFilter, selectedApp: $selectedApp)
+            RetentionView(filter: $selectedFilter, selectedApp: $selectedApp, apps: $apps)
                 .tabItem {
                     Label("Retention", systemImage: "arrow.triangle.2.circlepath")
                 }

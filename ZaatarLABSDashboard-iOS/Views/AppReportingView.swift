@@ -5,6 +5,7 @@ struct AppReportingView: View {
     @EnvironmentObject var api: APIService
     @Binding var filter: DateRangeFilter
     @Binding var selectedApp: String?
+    @Binding var apps: [AppInfo]
 
     @State private var data: AppLaunchesResponse?
     @State private var isLoading = false
@@ -32,6 +33,7 @@ struct AppReportingView: View {
     private func content(_ data: AppLaunchesResponse) -> some View {
         ScrollView {
             VStack(spacing: 16) {
+                AppPicker(selectedApp: $selectedApp, apps: apps)
                 FilterPicker(filter: $filter)
 
                 // KPI Cards
